@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <group android:id="@+id/nav_menu_top">
+        <item
+            android:id="@+id/nav_my_home"
+            android:title="Home" />
+        <item
+            android:id="@+id/nav_my_profile"
+            android:icon="@drawable/my_profile"
+            android:title="My Profile" />
+        <item
+            android:id="@+id/nav_imp_marked"
+            android:icon="@android:drawable/btn_star_big_on"
+            android:title="Important Marked" />
+    </group>
+
+    <item
+        android:title="Subjects"
+        app:showAsAction="collapseActionView">
+        <menu>
+            <item
+                android:id="@+id/nav_java"
+                android:icon="@drawable/subjects_icon"
+                android:title="Java" />
+            <item
+                android:id="@+id/nav_python"
+                android:icon="@drawable/subjects_icon"
+                android:title="Python" />
+            <item
+                android:id="@+id/nav_c"
+                android:icon="@drawable/subjects_icon"
+                android:title="C Programming" />
+        </menu>
+    </item>
+
+    <group android:id="@+id/nav_bottom">
+        <item
+            android:id="@+id/nav_about_us"
+            android:icon="@drawable/ic_about_us"
+            android:title="About Us" />
+        <item
+            android:id="@+id/nav_log_out"
+            android:icon="@drawable/logout_icon"
+            android:title="Log Out"
+            app:showAsAction="never" />
+    </group>
+
+
+</menu>

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1082747345799",
+    "firebase_url": "https://collegeforum-f645a.firebaseio.com",
+    "project_id": "collegeforum-f645a",
+    "storage_bucket": "collegeforum-f645a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1082747345799:android:a31aeb4a9ff66c0c",
+        "android_client_info": {
+          "package_name": "com.amitsharma.action.collegeforum"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1082747345799-6sgn6n2csm1fpm85n7vhdc978er7ilc3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.amitsharma.action.collegeforum",
+            "certificate_hash": "35201d2be4bfcf4e45205a35d97a9631143212ac"
+          }
+        },
+        {
+          "client_id": "1082747345799-97llj5ls2p9rqp5a7b2eda7ms9mv1qql.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDccIJuVAbPNYRSWjK6i03skbGAIrKZIcY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1082747345799-97llj5ls2p9rqp5a7b2eda7ms9mv1qql.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
