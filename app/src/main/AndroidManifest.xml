@@ -17,7 +17,8 @@
         android:roundIcon="@mipmap/glaforumicon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".StudentPanel"
+        <activity
+            android:name=".StudentPanel"
             android:configChanges="orientation"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -28,63 +29,64 @@
         </activity>
         <activity
             android:name=".LoginActivity"
+            android:configChanges="orientation"
             android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SignUpActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".SignUpActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SelectionActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".SelectionActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".FacultySignUpActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".FacultySignUpActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".FacultyTestQuiz"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".FacultyTestQuiz"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MainActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".VerifyUser"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".VerifyUser"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ResetPasswordActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".ResetPasswordActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AskQuestionActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".AskQuestionActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
-
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
         <activity android:name=".ProfileActivity" />
         <activity
             android:name=".AboutUsActivity"
-            android:parentActivityName=".StudentPanel"
             android:configChanges="orientation"
+            android:parentActivityName=".StudentPanel"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".StudentPanel" />
         </activity>
-        <activity android:name=".CompleteQuestionActivity"
-            android:parentActivityName=".StudentPanel"
+        <activity
+            android:name=".CompleteQuestionActivity"
             android:configChanges="orientation"
+            android:parentActivityName=".StudentPanel"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".StudentPanel" />
         </activity>
+        <activity android:name=".DisplayImageActivity"></activity>
     </application>
 
 </manifest>

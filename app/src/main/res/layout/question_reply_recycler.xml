@@ -32,15 +32,32 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/reply_user_name"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:text="-Posted by"
-                    android:textColor="@color/about_description_text_color"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/reply_user_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight="1"
+                        android:text="-Posted by"
+                        android:textColor="@color/about_description_text_color"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/reply_verfied_logo"
+                        android:layout_width="20dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0"
+                        android:visibility="gone"
+                        app:srcCompat="@drawable/verified_logo" />
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"

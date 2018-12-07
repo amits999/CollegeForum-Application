@@ -9,16 +9,16 @@
     <Button
         android:id="@+id/signupCreateAccount"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="31dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
         android:background="@drawable/rounded_btn"
         android:text="Create Account"
         android:textColor="@android:color/background_light"
-        android:textSize="25sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/scrollView2"
         app:layout_constraintHorizontal_bias="0.506"
@@ -59,20 +59,21 @@
 
     <TextView
         android:id="@+id/textView7"
-        android:layout_width="199dp"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginEnd="196dp"
-        android:layout_marginTop="88dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="197dp"
         android:text="Student Signup"
         android:textColor="@color/app_text_color"
-        android:textSize="35sp"
+        android:textSize="28sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.02"
-        app:layout_constraintStart_toStartOf="@+id/facultySignupBackImageView"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signupBackImageView" />
 
     <ImageView
         android:id="@+id/signupBackImageView"
@@ -94,11 +95,11 @@
         android:id="@+id/scrollView2"
         android:layout_width="0dp"
         android:layout_height="300dp"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_marginEnd="16dp"
+        android:layout_alignParentBottom="true"
         android:layout_marginTop="8dp"
-        android:background="@color/app_scroll_view_back_color"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/background_signup"
         android:padding="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/textView7"
@@ -218,8 +219,8 @@
                 android:layout_weight="1"
                 android:background="@color/app_spinner_color"
                 android:entries="@array/course_entries"
-                android:paddingBottom="5dp"
                 android:paddingTop="5dp"
+                android:paddingBottom="5dp"
                 tools:layout_editor_absoluteX="1dp"
                 tools:layout_editor_absoluteY="528dp" />
 
@@ -232,8 +233,8 @@
                 android:layout_weight="1"
                 android:background="@color/app_spinner_color"
                 android:entries="@array/branch_entries"
-                android:paddingBottom="5dp"
                 android:paddingTop="5dp"
+                android:paddingBottom="5dp"
                 tools:layout_editor_absoluteX="1dp"
                 tools:layout_editor_absoluteY="528dp" />
 

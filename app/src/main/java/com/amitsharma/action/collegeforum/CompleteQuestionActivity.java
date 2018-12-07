@@ -17,16 +17,24 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -61,6 +69,7 @@ public class CompleteQuestionActivity extends AppCompatActivity {
     RecyclerView mReplyRecyclerView;
     boolean impChecker=false;
     int countImp;
+    String impMarkedQuestion="";
 
 
     @Override
@@ -149,6 +158,7 @@ public class CompleteQuestionActivity extends AppCompatActivity {
 
                                 mImpRef.child(PostKey).child(curUid).setValue(true);
                                 impChecker=false;
+
                             }
                         }
                     }
@@ -180,6 +190,7 @@ public class CompleteQuestionActivity extends AppCompatActivity {
                         if (dataSnapshot.exists()){
                             String fullName=dataSnapshot.child("name").getValue().toString();
                             String profileImage=dataSnapshot.child("profile_image").getValue().toString();
+                            String user_tag=dataSnapshot.child("user_tag").getValue().toString();
 
                             HashMap replyMap=new HashMap();
                             replyMap.put("name",fullName);
@@ -187,6 +198,11 @@ public class CompleteQuestionActivity extends AppCompatActivity {
                             replyMap.put("time",saveCurrentTime);
                             replyMap.put("profile_image",profileImage);
                             replyMap.put("comment",comment);
+                            if (user_tag=="f"){
+                                replyMap.put("is_verified","true");
+                            }else{
+                                replyMap.put("is_verified","false");
+                            }
 
                             mCommentsDatabase.child(time).updateChildren(replyMap).addOnCompleteListener(new OnCompleteListener() {
                                 @Override
@@ -197,6 +213,8 @@ public class CompleteQuestionActivity extends AppCompatActivity {
                                         mCommentField.clearFocus();
                                         mCommentButton.setText("Add Comment");
                                         Toast.makeText(CompleteQuestionActivity.this, "Comment Successful.", Toast.LENGTH_SHORT).show();
+
+
                                     }else{
                                         Toast.makeText(CompleteQuestionActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                     }
@@ -218,36 +236,20 @@ public class CompleteQuestionActivity extends AppCompatActivity {
         mAttachImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mQuestionPost.child("question_image").addValueEventListener(new ValueEventListener() {
+                mQuestionPost.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        final String QuestionImageUrl=dataSnapshot.getValue().toString();
+                        String QuestionImageUrl="";
+                        if (dataSnapshot.child("question_image").exists()){
+                            QuestionImageUrl=dataSnapshot.child("question_image").getValue().toString().trim();
+                        }
+                        if (!QuestionImageUrl.isEmpty()){
+                            Intent intent =new Intent(CompleteQuestionActivity.this,DisplayImageActivity.class);
+                            intent.putExtra("image_url",QuestionImageUrl);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                            startActivity(intent);
 
-                        Target target = new Target() {
-                            @Override
-                            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                                Uri url=insertImage(getContentResolver(),bitmap,time,"new Question");
-                                Toast.makeText(CompleteQuestionActivity.this, url.toString(), Toast.LENGTH_SHORT).show();
-
-                                Intent intent = new Intent();
-                                intent.setAction(Intent.ACTION_VIEW);
-                                intent.setDataAndType( url , "image/*");
-                                getApplicationContext().startActivity(intent);
-
-                            }
-
-                            @Override
-                            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-
-                            }
-
-                            @Override
-                            public void onPrepareLoad(Drawable placeHolderDrawable) {
-                            }
-                        };
-
-                        Picasso.get().load(QuestionImageUrl).into(target);
-
+                        }
 
                     }
 
@@ -263,68 +265,6 @@ public class CompleteQuestionActivity extends AppCompatActivity {
 
         DisplayAllUserComments();
     }
-//......................................
-    public static final Uri insertImage(ContentResolver cr,
-                                           Bitmap source,
-                                           String title,
-                                           String description) {
-
-        ContentValues values = new ContentValues();
-        values.put(MediaStore.Images.Media.TITLE, title);
-        values.put(MediaStore.Images.Media.DISPLAY_NAME, title);
-        values.put(MediaStore.Images.Media.DESCRIPTION, description);
-        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-        // Add the date meta data to ensure the image is added at the front of the gallery
-        values.put(MediaStore.Images.Media.DATE_ADDED, System.currentTimeMillis());
-        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
-
-        Uri url = null;
-        String stringUrl = null;    /* value to be returned */
-
-        try {
-            url = cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-
-            if (source != null) {
-                OutputStream imageOut = cr.openOutputStream(url);
-                try {
-                    source.compress(Bitmap.CompressFormat.JPEG, 50, imageOut);
-                } finally {
-                    imageOut.close();
-                }
-
-                long id = ContentUris.parseId(url);
-                // Wait until MINI_KIND thumbnail is generated.
-                Bitmap miniThumb = MediaStore.Images.Thumbnails.getThumbnail(cr, id, MediaStore.Images.Thumbnails.MINI_KIND, null);
-                // This is for backward compatibility.
-                //storeThumbnail(cr, miniThumb, id, 50F, 50F, MediaStore.Images.Thumbnails.MICRO_KIND);
-            } else {
-                cr.delete(url, null, null);
-                url = null;
-            }
-        } catch (Exception e) {
-            if (url != null) {
-                cr.delete(url, null, null);
-                url = null;
-            }
-        }
-
-        if (url != null) {
-            stringUrl = url.toString();
-        }
-
-        return url;
-    }
-//.....................................
-
-
-    private void openImage(Uri uri) {
-        Intent gallaryIntent=new Intent();
-        gallaryIntent.setAction(Intent.CATEGORY_OPENABLE);
-        gallaryIntent.setType("image/*");
-        gallaryIntent.setData(uri);
-        startActivity(gallaryIntent);
-    }
-
 
     private void displayImpQuestionStatus(final String postKey) {
 
@@ -351,22 +291,34 @@ public class CompleteQuestionActivity extends AppCompatActivity {
     }
 
     private void DisplayAllUserComments() {
+
+        FirebaseRecyclerOptions options=new FirebaseRecyclerOptions.Builder<QuestionModel>()
+                .setQuery(mCommentsDatabase, QuestionModel.class)
+                .build();
+
         FirebaseRecyclerAdapter<QuestionModel,CommentViewHolder> firebaseReplyRecyclerAdapter=new FirebaseRecyclerAdapter<QuestionModel, CommentViewHolder>(
-                QuestionModel.class,
-                R.layout.question_reply_recycler,
-                CommentViewHolder.class,
-                mCommentsDatabase
-        ) {
+                options) {
             @Override
-            protected void populateViewHolder(CommentViewHolder viewHolder, QuestionModel model, int position) {
-                viewHolder.setName(model.getName());
-                viewHolder.setDate(model.getDate());
-                viewHolder.setTime(model.getTime());
-                viewHolder.setComment(model.getComment());
-                viewHolder.setProfile_image(model.getProfile_image());
+            protected void onBindViewHolder(@NonNull CommentViewHolder holder, int position, @NonNull QuestionModel model) {
+                holder.setName(model.getName());
+                holder.setDate(model.getDate());
+                holder.setTime(model.getTime());
+                holder.setComment(model.getComment());
+                holder.setProfile_image(model.getProfile_image());
+                holder.setIs_verified(model.getIs_verified());
+            }
+
+            @NonNull
+            @Override
+            public CommentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view=LayoutInflater.from(parent.getContext()).inflate(R.layout.question_reply_recycler,parent,false);
+                CommentViewHolder viewHolder=new CommentViewHolder(view);
+                return viewHolder;
             }
         };
+
         mReplyRecyclerView.setAdapter(firebaseReplyRecyclerAdapter);
+        firebaseReplyRecyclerAdapter.startListening();
     }
 
     public static class CommentViewHolder extends RecyclerView.ViewHolder{
@@ -399,6 +351,15 @@ public class CompleteQuestionActivity extends AppCompatActivity {
             CircleImageView mProfileImage=(CircleImageView) mView.findViewById(R.id.reply_profile_image);
             Picasso.get().load(profile_image).into(mProfileImage);
         }
+
+        public void setIs_verified(String is_verified){
+
+//            Log.i("Verification",is_verified);
+            if (is_verified.equals("true")){
+                ImageView verified=(ImageView) mView.findViewById(R.id.reply_verfied_logo);
+                verified.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     private void displayQuestionInformation() {
@@ -413,8 +374,10 @@ public class CompleteQuestionActivity extends AppCompatActivity {
                     mSubject.setText("."+dataSnapshot.child("subject").getValue().toString());
                     mQuestion.setText(dataSnapshot.child("que_text").getValue().toString());
 
-                    mPostProfileText=dataSnapshot.child("profile_image").getValue().toString();
-                    Picasso.get().load(mPostProfileText).into(mPostProfile);
+                    if (dataSnapshot.child("profile_image").exists()){
+                        mPostProfileText=dataSnapshot.child("profile_image").getValue().toString();
+                        Picasso.get().load(mPostProfileText).into(mPostProfile);
+                    }
 
                     if (dataSnapshot.child("question_image").exists()){
                         mAttachImageButton.setVisibility(View.VISIBLE);

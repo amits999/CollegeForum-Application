@@ -6,13 +6,16 @@ public class QuestionModel {
     String comment;
     String date;
     String time;
+    String is_verified;
 
-    public QuestionModel(String name, String profile_image, String comment, String date, String time) {
+
+    public QuestionModel(String name, String profile_image, String comment, String date, String time, String is_verified) {
         this.name = name;
         this.profile_image = profile_image;
         this.comment = comment;
         this.date = date;
         this.time = time;
+        this.is_verified=is_verified;
     }
 
     public QuestionModel() {
@@ -56,5 +59,13 @@ public class QuestionModel {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public String getIs_verified() {
+        return is_verified;
+    }
+
+    public void setIs_verified(String is_verified) {
+        this.is_verified = is_verified;
     }
 }

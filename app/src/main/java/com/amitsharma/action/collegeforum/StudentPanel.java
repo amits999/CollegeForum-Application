@@ -9,8 +9,12 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuCompat;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
@@ -19,6 +23,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -50,6 +55,8 @@ public class StudentPanel extends AppCompatActivity {
     RecyclerView mRecyclerView;
     String name="",uid="";
     private FirebaseUser currentuser;
+    private ViewPager myViewPager;
+    private TabsAdapter tabsAdapter;
 
     private CircleImageView navProfileImageView;
     private TextView navProfileUserName;
@@ -75,8 +82,11 @@ public class StudentPanel extends AppCompatActivity {
         setContentView(R.layout.activity_student_panel);
 
         final View parentLayout = findViewById(android.R.id.content);
+        myViewPager=(ViewPager) findViewById(R.id.main_tabs_pager);
 
-        mAuth=FirebaseAuth.getInstance();
+        tabsAdapter=new TabsAdapter(getSupportFragmentManager());
+        myViewPager.setAdapter(tabsAdapter);
+
 
         context=getApplicationContext();
 
@@ -84,8 +94,8 @@ public class StudentPanel extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("GLA Forum");
 
-        mRecyclerView= findViewById(R.id.student_recycler_view);
-        mRecyclerView.setHasFixedSize(true);
+//        mRecyclerView= findViewById(R.id.student_recycler_view);
+//        mRecyclerView.setHasFixedSize(true);
 
         mSharedPref=getSharedPreferences("SortSettings",MODE_PRIVATE);
         String mSorting=mSharedPref.getString("Sort","newest");
@@ -96,7 +106,7 @@ public class StudentPanel extends AppCompatActivity {
             sortItemAsOldest();
         }
 
-        mRecyclerView.setLayoutManager(linearLayoutManager);
+//        mRecyclerView.setLayoutManager(linearLayoutManager);
 
         mQuestionDatabase= FirebaseDatabase.getInstance().getReference().child("Questions");
         mRef= FirebaseDatabase.getInstance().getReference().child("Users");
@@ -116,6 +126,8 @@ public class StudentPanel extends AppCompatActivity {
 
         navProfileImageView=(CircleImageView) navView.findViewById(R.id.user_profile_image);
         navProfileUserName=(TextView) navView.findViewById(R.id.user_name);
+
+        mAuth=FirebaseAuth.getInstance();
 
         if (mAuth.getCurrentUser()!=null){
             String currentUserId=mAuth.getCurrentUser().getUid();
@@ -153,7 +165,7 @@ public class StudentPanel extends AppCompatActivity {
                 }
             });
 
-            // DisplayAllUserQuestions();
+            // -----not this DisplayAllUserQuestions();
 
         }
 
@@ -187,76 +199,9 @@ public class StudentPanel extends AppCompatActivity {
         linearLayoutManager.setStackFromEnd(false);
     }
 
-    private void DisplayAllUserQuestions() {
-        FirebaseRecyclerAdapter<Model,QuestionViewHolder> firebaseRecyclerAdapter=new FirebaseRecyclerAdapter<Model, QuestionViewHolder>(
-                Model.class,
-                R.layout.question_recycler,
-                QuestionViewHolder.class,
-                mQuestionDatabase
-        ) {
-            @Override
-            protected void populateViewHolder(QuestionViewHolder viewHolder, Model model, int position) {
-//from here we can check if user is anonymous or not than we can display profile image and name of user accordingly
-
-                final String postKey=getRef(position).getKey();
-
-                viewHolder.setName(model.getName());
-                viewHolder.setDate(model.getDate());
-                viewHolder.setTime(model.getTime());
-                viewHolder.setSubject(model.getSubject());
-                viewHolder.setTitle(model.getTitle());
-                viewHolder.setProfile_image(model.getProfile_image());
-
-                viewHolder.mView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent replyQuestionIntent=new Intent(StudentPanel.this,CompleteQuestionActivity.class);
-                        replyQuestionIntent.putExtra("postKey",postKey);
-                        startActivity(replyQuestionIntent);
-                    }
-                });
-            }
-        };
-        mRecyclerView.setAdapter(firebaseRecyclerAdapter);
-    }
-
-    public static class QuestionViewHolder extends RecyclerView.ViewHolder{
-
-        View mView;
-        public QuestionViewHolder(View itemView) {
-            super(itemView);
-
-            mView=itemView;
-        }
-        public void setName(String name){
-            TextView username=(TextView) mView.findViewById(R.id.que_user_name);
-            username.setText(name);
-        }
-
-        public void setTitle(String title){
-            TextView mTitle=(TextView) mView.findViewById(R.id.que_title);
-            mTitle.setText("> "+title);
-        }
-
-        public void setSubject(String subject){
-            TextView mSubject=(TextView) mView.findViewById(R.id.que_subject);
-            mSubject.setText("."+subject);
-        }
-
-        public void setTime(String time){
-            TextView mTime=(TextView) mView.findViewById(R.id.que_time);
-            mTime.setText(time);
-        }
-
-        public void setDate(String date){
-            TextView mDate=(TextView) mView.findViewById(R.id.que_date);
-            mDate.setText(date);
-        }
-        public void setProfile_image(String profile_image){
-            CircleImageView mProfileImage=(CircleImageView) mView.findViewById(R.id.que_profile_image);
-            Picasso.get().load(profile_image).into(mProfileImage);
-        }
-    }
+/*
+    Code before adding fragments
+*/
 
     @Override
     public void onBackPressed() {
@@ -321,7 +266,7 @@ public class StudentPanel extends AppCompatActivity {
             });
         }
 
-        DisplayAllUserQuestions();
+     //   DisplayAllUserQuestions();
 //......................................
     }
 
@@ -330,11 +275,23 @@ public class StudentPanel extends AppCompatActivity {
         switch (menuItem.getItemId()){
 
             case R.id.nav_my_home:
-                Toast.makeText(getApplicationContext(), "Home", Toast.LENGTH_SHORT).show();
+                if (myViewPager.getCurrentItem()==0){
+                    drawerLayout.closeDrawer(Gravity.START);
+                    Toast.makeText(context, "You are on HOME!", Toast.LENGTH_SHORT).show();
+                }else{
+                    myViewPager.setCurrentItem(0);
+                    drawerLayout.closeDrawer(Gravity.START);
+                }
                 break;
 
             case R.id.nav_imp_marked:
-                Toast.makeText(getApplicationContext(), "Important marked", Toast.LENGTH_SHORT).show();
+                if (myViewPager.getCurrentItem()==1){
+                    drawerLayout.closeDrawer(Gravity.START);
+                    Toast.makeText(context, "Already opened!", Toast.LENGTH_SHORT).show();
+                }else{
+                    myViewPager.setCurrentItem(1);
+                    drawerLayout.closeDrawer(Gravity.START);
+                }
                 break;
 
             case R.id.nav_my_profile:
@@ -378,7 +335,7 @@ public class StudentPanel extends AppCompatActivity {
         startActivity(mainIntent);
         finish();
     }
-
+/*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -400,7 +357,7 @@ public class StudentPanel extends AppCompatActivity {
         });
         return super.onCreateOptionsMenu(menu);
     }
-
+*/
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -456,6 +413,7 @@ public class StudentPanel extends AppCompatActivity {
         builder.show();
 
     }
+/*
 
     private void firebaseSearch(String searchText){
         Query firebaseSearchQuery=mRef.orderByChild("title").startAt(searchText).endAt(searchText  +"\uf8ff");
@@ -491,4 +449,6 @@ public class StudentPanel extends AppCompatActivity {
         };
         mRecyclerView.setAdapter(firebaseRecyclerAdapter);
     }
+
+    */
 }

@@ -253,7 +253,9 @@ public class AskQuestionActivity extends AppCompatActivity {
                         userMap.put("time", saveCurrentTime);
                         userMap.put("name", fullName);
                         userMap.put("profile_image", profileImage);
-                        userMap.put("question_image", downloadUrl);
+                        if (!downloadUrl.isEmpty()){
+                            userMap.put("question_image", downloadUrl);
+                        }
                     }else{
                         userMap = new HashMap<>();
                         userMap.put("title", title);
@@ -264,7 +266,9 @@ public class AskQuestionActivity extends AppCompatActivity {
                         userMap.put("date", saveCurrentDate);
                         userMap.put("time", saveCurrentTime);
                         userMap.put("name", fullName);
-                        userMap.put("question_image", downloadUrl);
+                        if (!downloadUrl.isEmpty()){
+                            userMap.put("question_image", downloadUrl);
+                        }
                     }
 
         /*            mQuestionRef.child("profile_image").setValue(downloadUrl).addOnCompleteListener(new OnCompleteListener<Void>() {

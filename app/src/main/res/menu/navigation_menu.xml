@@ -5,6 +5,7 @@
     <group android:id="@+id/nav_menu_top">
         <item
             android:id="@+id/nav_my_home"
+            android:icon="@drawable/ic_format_list_bulleted_black_48dp"
             android:title="Home" />
         <item
             android:id="@+id/nav_my_profile"
@@ -12,7 +13,7 @@
             android:title="My Profile" />
         <item
             android:id="@+id/nav_imp_marked"
-            android:icon="@android:drawable/btn_star_big_on"
+            android:icon="@drawable/ic_star"
             android:title="Important Marked" />
     </group>
 
